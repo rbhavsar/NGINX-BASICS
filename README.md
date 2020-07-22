@@ -145,10 +145,18 @@ USSFNRBHAV01:~ rbhavsar$
 
 **Reverse proxy**
 
+![](/nginx/screenshots/reverse-proxy.jpg)
+
+Completely remote site proxying via our server 
+
+location /google {
+         add_header proxied nginx;
+          proxy_pass 'https://www.google.com/';
+        }
 
 
 
-
+![](/nginx/screenshots/google.jpg)
 
 
 
