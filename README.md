@@ -61,6 +61,97 @@ location ^~ /Greet2 {
 ```
 
 
+**Variables**
+- Configuration - set $var 'something'
+- NGINX module variable - $http , $uri, $args
+
+Example 1 :
+```
+location /greet {
+          return 200 '$host\n$uri';
+        }
+```
+Output : 
+127.0.0.1 /greet
+
+Example 2:
+```
+ if ( $arg_apikey != 1234 ){
+          return 401 "Incorrect key.";
+        }
+```
+
+Output : 
+- Load http://127.0.0.1:8080/ page —> it will return Incorrect Api key
+- Load http://127.0.0.1:8080?apikey=1234 -> page will load correctly
+
+
+**Return**
+
+
+Create simple redirect with return directive 
+Goal : when we access  http://127.0.0.1:8080/logo —> it should redirect to http://127.0.0.1:8080/thumb.png
+
+```
+location /logo {
+          return 307 /thumb.png;
+        }
+```
+
+**Rewrite**
+
+It will return the response as per rule set but it will keep original url on browser
+
+```
+rewrite ^/user/\w+ /greeting;
+
+        location /greeting {
+          return 200 'Hello users';
+        }
+```
+
+With above code : access http://127.0.0.1:8080/user/ravi(any word) —> it will print ‘Hello users’ but it will stay on http://127.0.0.1:8080/user/ravi url
+
+***Headers & Expires**
+Add Response headers + manupulate the headers
+
+```
+location = /thumb.png {
+
+          add_header my_header "Hello";  
+          add_header Cache-Control public;
+          expires 1M;
+ }
+```
+
+```
+USSFNRBHAV01:~ rbhavsar$ curl -I http://127.0.0.1:8080/thumb.png
+HTTP/1.1 200 OK
+Server: nginx/1.19.0
+Date: Mon, 29 Jun 2020 05:57:27 GMT
+Content-Type: image/png
+Content-Length: 12627
+Last-Modified: Wed, 11 Apr 2018 20:31:37 GMT
+Connection: keep-alive
+ETag: "5ace70a9-3153"
+Expires: Wed, 29 Jul 2020 05:57:27 GMT
+Cache-Control: max-age=2592000
+my_header: Hello
+Cache-Control: public
+Accept-Ranges: bytes
+USSFNRBHAV01:~ rbhavsar$ 
+```
+
+
+**Reverse proxy**
+
+
+
+
+
+
+
+
 
 
 
